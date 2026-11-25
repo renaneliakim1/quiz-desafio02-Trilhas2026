@@ -1,6 +1,7 @@
 import '../data/question_bank.dart';
 import '../models/difficulty.dart';
 import '../models/score_entry.dart';
+import '../models/topic.dart';
 import '../services/quiz_engine.dart';
 import '../services/ranking_service.dart';
 import 'console.dart';
@@ -53,15 +54,23 @@ class QuizApp {
     _terminal.line('Teste seus conhecimentos em:');
     _terminal.line(
       _terminal.cyan(
-        'JavaScript  React  Java  Flutter  React Native  Kotlin  Dart  Swift',
+        'Linguagens: JavaScript, Java, Kotlin, Dart, Swift',
+      ),
+    );
+    _terminal.line(
+      _terminal.cyan(
+        'Bibliotecas/Frameworks: React, React Native, Flutter',
       ),
     );
     _terminal.blank();
     _terminal.line(
-      'Cada partida tem ${QuizEngine.questionsPerQuiz} perguntas com 4 alternativas (A-D).',
+      'Banco com ${questionBank.length} perguntas, cada uma com 4 alternativas (A-D).',
     );
     _terminal.line(
-      'Escolha entre os níveis Fácil, Intermediário, Difícil ou Misto.',
+      'Cada partida tem ${QuizEngine.questionsPerQuiz} perguntas sorteadas sem repetir.',
+    );
+    _terminal.line(
+      'Escolha a área (todas, linguagens ou bibliotecas) e o nível de dificuldade.',
     );
     _terminal.line(
       _terminal.dim('Fique tranquilo: você pode jogar quantas vezes quiser.'),
@@ -90,7 +99,11 @@ class QuizApp {
 
     while (playAgain) {
       final difficulty = _chooseDifficulty();
-      final questions = _engine.buildQuiz(difficulty: difficulty);
+      final category = _chooseCategory();
+      final questions = _engine.buildQuiz(
+        difficulty: difficulty,
+        category: category,
+      );
 
       if (questions.isEmpty) {
         _terminal.line(
@@ -100,11 +113,13 @@ class QuizApp {
       }
 
       final difficultyLabel = difficulty?.label ?? 'Misto';
+      final categoryLabel = category?.label ?? 'Todas as áreas';
 
       _terminal.blank();
       _terminal.line(_terminal.cyan('Boa sorte, $name!'));
       _terminal.line(
         'Dificuldade: ${_terminal.bold(difficultyLabel)}  |  '
+        'Área: ${_terminal.bold(categoryLabel)}  |  '
         'Perguntas: ${questions.length}',
       );
       _terminal.blank();
@@ -175,13 +190,30 @@ class QuizApp {
     };
   }
 
+  TopicCategory? _chooseCategory() {
+    _terminal.blank();
+    _terminal.line(_terminal.bold('Escolha a área:'));
+    _terminal.line('  [1] Todas as tecnologias');
+    _terminal.line('  [2] Somente linguagens');
+    _terminal.line('  [3] Somente bibliotecas e frameworks');
+    _terminal.blank();
+
+    final choice = _terminal.readMenuOption('Área: ', ['1', '2', '3']);
+
+    return switch (choice) {
+      '2' => TopicCategory.linguagem,
+      '3' => TopicCategory.biblioteca,
+      _ => null,
+    };
+  }
+
   void _showQuestion(int number, int total, PresentedQuestion presented) {
     final question = presented.question;
 
     _terminal.line(_terminal.dim('-' * 62));
     _terminal.line(
       '${_terminal.bold('Pergunta $number/$total')}  '
-      '${_terminal.magenta('[${question.topic.label}]')}  '
+      '${_terminal.magenta('[${question.topic.displayLabel}]')}  '
       '${_terminal.yellow('(${question.difficulty.label})')}',
     );
     _terminal.blank();

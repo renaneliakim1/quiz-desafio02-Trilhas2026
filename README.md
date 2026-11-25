@@ -1,14 +1,11 @@
 # Quiz de Programação - Desafio 2
 
-**Integrantes:** [Nome do integrante 1] e [Nome do integrante 2]  
-**Trilha:** [Nome da trilha]  
-**Entrega:** 28/11/2026
-
 ## Sobre o projeto
 
 Este é um quiz de perguntas e respostas executado no terminal, desenvolvido em
-Dart para o Desafio 2. O tema escolhido foi **programação**, com perguntas sobre
-JavaScript, React, Java, Flutter, React Native, Kotlin, Dart e Swift.
+Dart para o Desafio 2. O tema escolhido foi **programação**, com perguntas
+separadas entre **linguagens** (JavaScript, Java, Kotlin, Dart e Swift) e
+**bibliotecas/frameworks** (React, React Native e Flutter).
 
 O jogo sorteia **10 perguntas por partida**, apresenta quatro alternativas
 (A, B, C e D), valida a resposta do jogador e mostra a alternativa correta
@@ -17,10 +14,12 @@ salva o resultado no ranking.
 
 ## Funcionalidades
 
-- 48 perguntas divididas em três níveis de dificuldade: Fácil, Intermediário e Difícil.
-- Cada nível tem perguntas de todas as 8 tecnologias do tema.
+- 96 perguntas divididas em três níveis de dificuldade: Fácil, Intermediário e Difícil.
+- 4 perguntas de cada tecnologia em cada dificuldade, reduzindo a repetição entre partidas.
+- Tecnologias separadas entre **linguagens** e **bibliotecas/frameworks**.
+- Escolha da área do quiz: todas as tecnologias, somente linguagens ou somente bibliotecas.
 - Modo **Misto**, que combina perguntas de todas as dificuldades.
-- Cada partida tem 10 perguntas, sorteadas sem repetição e com cobertura de todas as tecnologias.
+- Cada partida tem 10 perguntas, sorteadas sem repetição e com cobertura de todas as tecnologias da área escolhida.
 - Alternativas embaralhadas a cada partida.
 - Respostas aceitas em maiúsculas ou minúsculas (`A` ou `a`).
 - Respostas vazias ou inválidas são recusadas e o jogador responde novamente.
@@ -50,9 +49,10 @@ C:\flutter\bin\dart.bat run
 1. No menu principal, escolha `[1] Jogar`.
 2. Digite seu nome.
 3. Escolha a dificuldade: Fácil, Intermediário, Difícil ou Misto.
-4. Responda as 10 perguntas digitando `A`, `B`, `C` ou `D`.
-5. Confira a pontuação e a mensagem final.
-6. Acesse `[2] Ver ranking` para consultar as melhores partidas.
+4. Escolha a área: todas as tecnologias, somente linguagens ou somente bibliotecas e frameworks.
+5. Responda as 10 perguntas digitando `A`, `B`, `C` ou `D`.
+6. Confira a pontuação e a mensagem final.
+7. Acesse `[2] Ver ranking` para consultar as melhores partidas.
 
 ## Exemplo de pergunta
 
@@ -79,12 +79,12 @@ lib/
   quiz_programacao.dart        Exporta as APIs do projeto
   src/
     data/
-      question_bank.dart       Lista com as 48 perguntas
+      question_bank.dart       Lista com as 96 perguntas
     models/
       difficulty.dart          Níveis de dificuldade
       question.dart            Modelo de uma pergunta
       score_entry.dart         Modelo de uma partida do ranking
-      topic.dart               Tecnologias abordadas
+      topic.dart               Tecnologias e categorias (linguagem/biblioteca)
     services/
       quiz_engine.dart         Sorteio e embaralhamento das perguntas
       ranking_service.dart     Leitura e gravação do ranking em JSON
@@ -117,10 +117,12 @@ dart test
 
 Os testes verificam:
 
-- quantidade mínima de perguntas por dificuldade;
+- quantidade mínima de perguntas por dificuldade e por tecnologia;
 - quatro alternativas válidas e explicação em todas as perguntas;
 - identificadores únicos e cobertura de todas as tecnologias;
+- separação correta entre linguagens e bibliotecas/frameworks;
 - sorteio de 10 perguntas sem repetição, com todas as tecnologias;
+- filtro por área (linguagens ou bibliotecas) mantendo a cobertura de tecnologias;
 - presença das três dificuldades no modo Misto;
 - embaralhamento das alternativas sem perder a resposta correta;
 - serialização e ordenação das pontuações;
@@ -146,11 +148,11 @@ minúsculas, entradas vazias, entradas inválidas e persistência do ranking.
 
 ## Checklist de testes manuais
 
-- [ ] As perguntas e as quatro alternativas aparecem corretamente.
-- [ ] Respostas corretas e incorretas são identificadas.
-- [ ] Em caso de erro, a alternativa correta é exibida.
-- [ ] Letras maiúsculas e minúsculas são aceitas.
-- [ ] Respostas inválidas ou vazias solicitam uma nova resposta.
-- [ ] A pontuação final corresponde à quantidade de acertos.
-- [ ] O ranking é salvo e exibido na ordem correta.
-- [ ] É possível jogar novamente e voltar ao menu.
+- [ok] As perguntas e as quatro alternativas aparecem corretamente.
+- [ok] Respostas corretas e incorretas são identificadas.
+- [ok] Em caso de erro, a alternativa correta é exibida.
+- [ok] Letras maiúsculas e minúsculas são aceitas.
+- [ok] Respostas inválidas ou vazias solicitam uma nova resposta.
+- [ok] A pontuação final corresponde à quantidade de acertos.
+- [ok] O ranking é salvo e exibido na ordem correta.
+- [ok] É possível jogar novamente e voltar ao menu.

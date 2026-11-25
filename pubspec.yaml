@@ -1,6 +1,6 @@
 name: quiz_programacao
-description: Quiz de programação para terminal com níveis, ranking e 48 perguntas.
-version: 1.0.0
+description: Quiz de programação para terminal com níveis, categorias, ranking e 96 perguntas.
+version: 1.1.0
 publish_to: none
 
 environment:

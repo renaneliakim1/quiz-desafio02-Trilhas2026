@@ -2,6 +2,7 @@ import 'dart:math';
 
 import '../models/difficulty.dart';
 import '../models/question.dart';
+import '../models/topic.dart';
 
 class PresentedQuestion {
   PresentedQuestion({
@@ -42,9 +43,14 @@ class QuizEngine {
 
   List<PresentedQuestion> buildQuiz({
     Difficulty? difficulty,
+    TopicCategory? category,
     int count = questionsPerQuiz,
   }) {
-    final selected = _selectQuestions(difficulty: difficulty, count: count);
+    final selected = _selectQuestions(
+      difficulty: difficulty,
+      category: category,
+      count: count,
+    );
     return [
       for (final question in selected)
         PresentedQuestion.shuffled(question, _random),
@@ -53,11 +59,14 @@ class QuizEngine {
 
   List<Question> _selectQuestions({
     Difficulty? difficulty,
+    TopicCategory? category,
     required int count,
   }) {
     final pool = bank
         .where(
-          (question) => difficulty == null || question.difficulty == difficulty,
+          (question) =>
+              (difficulty == null || question.difficulty == difficulty) &&
+              (category == null || question.topic.category == category),
         )
         .toList();
 

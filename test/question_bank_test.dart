@@ -62,6 +62,46 @@ void main() {
         }
       }
     });
+
+    test('cada tecnologia tem pelo menos 4 perguntas por dificuldade', () {
+      for (final topic in TechTopic.values) {
+        for (final difficulty in Difficulty.values) {
+          final total = questionBank
+              .where(
+                (question) =>
+                    question.topic == topic &&
+                    question.difficulty == difficulty,
+              )
+              .length;
+
+          expect(
+            total,
+            greaterThanOrEqualTo(4),
+            reason: '${topic.label} / ${difficulty.label}',
+          );
+        }
+      }
+    });
+
+    test('tecnologias estão separadas entre linguagens e bibliotecas', () {
+      final languages = TechTopic.values.where((topic) => topic.isLanguage);
+      final libraries = TechTopic.values.where(
+        (topic) => topic.category == TopicCategory.biblioteca,
+      );
+
+      expect(languages.map((topic) => topic.label), [
+        'JavaScript',
+        'Java',
+        'Kotlin',
+        'Dart',
+        'Swift',
+      ]);
+      expect(
+        libraries.map((topic) => topic.label),
+        unorderedEquals(['React', 'React Native', 'Flutter']),
+      );
+      expect(libraries.every((topic) => topic.language != null), isTrue);
+    });
   });
 
   group('QuizEngine', () {
@@ -108,6 +148,35 @@ void main() {
         quiz.map((presented) => presented.question.difficulty).toSet(),
         hasLength(Difficulty.values.length),
       );
+    });
+
+    test('filtra por categoria e cobre todas as tecnologias da categoria', () {
+      for (final category in TopicCategory.values) {
+        for (final difficulty in Difficulty.values) {
+          final engine = QuizEngine(bank: questionBank, random: Random(3));
+          final quiz = engine.buildQuiz(
+            difficulty: difficulty,
+            category: category,
+          );
+          final expectedTopics = TechTopic.values
+              .where((topic) => topic.category == category)
+              .length;
+
+          expect(quiz, hasLength(QuizEngine.questionsPerQuiz));
+          expect(
+            quiz.map((presented) => presented.question.topic).toSet(),
+            hasLength(expectedTopics),
+          );
+          expect(
+            quiz.every(
+              (presented) =>
+                  presented.question.topic.category == category &&
+                  presented.question.difficulty == difficulty,
+            ),
+            isTrue,
+          );
+        }
+      }
     });
 
     test('embaralha as alternativas mantendo a resposta correta', () {
