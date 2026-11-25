@@ -1,0 +1,11 @@
+# Dependências e artefatos gerados pelo Dart
+.dart_tool/
+build/
+
+# Arquivos de IDE
+.idea/
+*.iml
+.vscode/
+
+# Ranking gerado em tempo de execução
+ranking.json
